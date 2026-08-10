@@ -4,7 +4,7 @@ import os
 PROJECT_ROOT=Path(__file__).resolve().parent.parent
 import sys
 sys.path.insert(0,str(PROJECT_ROOT))
-from src import config,database
+from src import config,database,extract
 
 def main():
     admin_conn=None
@@ -36,11 +36,9 @@ def main():
 
             seed_file=database.execute_sql('002_seed_locations.sql')
             cur.execute(seed_file)
-
+            
             print('Database initialization completed successfully.')
 
-            cur.execute("SELECT COUNT(*) FROM weather.locations")
-            
     except Exception as e:
         print(f'Error occurred:{e}')
 
