@@ -8,6 +8,7 @@ from src import pipeline
 
 def main():
     exit_code=pipeline.main()
+    print('Done!')
     return exit_code
 
 if __name__=='__main__':
