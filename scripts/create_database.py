@@ -27,6 +27,7 @@ def main():
             admin_cur.close()
         if admin_conn:
             admin_conn.close()
+            
 
     try:
         with database.get_connection(config.PG_DBNAME) as conn:
