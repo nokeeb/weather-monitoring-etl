@@ -4,3 +4,4 @@ __pycache__/
 *.pyc 
 logs/*.log
 data/raw/*.json
+schedule/run_weather_etl.bat

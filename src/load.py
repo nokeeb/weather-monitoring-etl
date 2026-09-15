@@ -2,7 +2,7 @@ import psycopg2.extras
 from datetime import datetime,timezone
 def create_audit_row(conn,run_id):
     psycopg2.extras.register_uuid()
-    started_at=datetime.now(timezone.utc)    
+    started_at=datetime.now(timezone.utc).replace(microsecond=0) 
     status='RUNNING'
     records_extracted=0
     records_loaded=0
@@ -23,7 +23,6 @@ def insert_observations(conn,records):
     try:
         cur=conn.cursor()
         for record in records:
-            print(list(record.values()))
             cur.execute("""INSERT INTO weather.observations
             (run_id,location_id,observed_at,
             extracted_at,temperature_c,relative_humidity_pct,
@@ -41,7 +40,7 @@ def insert_observations(conn,records):
         raise
 
 def update_audit_row(conn,status,records_extracted,records_loaded,erorr_message,run_id):
-    finished_at=datetime.now(timezone.utc)
+    finished_at=datetime.now(timezone.utc).replace(microsecond=0)
     cur=conn.cursor()
     cur.execute("""UPDATE weather.pipeline_runs 
     SET finished_at=%s,status=%s,records_extracted=%s,
