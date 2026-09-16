@@ -48,7 +48,8 @@ def main():
             status='PARTIAL'
     finally:
         try:
-            load.update_audit_row(conn,status,records_extracted,rows_inserted,errors,run_id)
+            error_message=" | ".join(str(e) for e in errors)
+            load.update_audit_row(conn,status,records_extracted,rows_inserted,error_message,run_id) if errors else None
             logging.info(f'''run_id={run_id} Pipeline finished with status={status}\n
             --------------------------------------------------------------------------------------------''')
         except Exception as e:

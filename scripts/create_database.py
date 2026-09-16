@@ -4,7 +4,7 @@ import os
 PROJECT_ROOT=Path(__file__).resolve().parent.parent
 import sys
 sys.path.insert(0,str(PROJECT_ROOT))
-from src import config,database,extract
+from src import config,database
 import logging
 
 def main():
@@ -12,7 +12,6 @@ def main():
     admin_cur=None
     conn=None
     cur=None
-
     try:
         admin_conn=database.get_connection(config.PG_ADMIN_DB)
         admin_conn.autocommit=True  
@@ -26,7 +25,7 @@ def main():
             print('Database already exists !')
     except Exception as e:
         logging.error(f'Database error occured: {e}')
-        sys.exit(main())
+        sys.exit(1)
 
     finally:
         if admin_cur:
@@ -48,11 +47,11 @@ def main():
 
     except Exception as e:
         logging.error(f'Database error occured: {e}')
-        sys.exit(main())
+        sys.exit(1)
     finally:
         if conn:
             conn.close()
             
 
 if __name__=='__main__':
-    sys.exit(main())
+    main()
