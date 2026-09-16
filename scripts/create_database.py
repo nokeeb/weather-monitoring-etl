@@ -5,6 +5,7 @@ PROJECT_ROOT=Path(__file__).resolve().parent.parent
 import sys
 sys.path.insert(0,str(PROJECT_ROOT))
 from src import config,database,extract
+import logging
 
 def main():
     admin_conn=None
@@ -16,11 +17,16 @@ def main():
         admin_conn=database.get_connection(config.PG_ADMIN_DB)
         admin_conn.autocommit=True  
         admin_cur=admin_conn.cursor()
-        admin_cur.execute('DROP DATABASE IF EXISTS weather_etl_db')
-        admin_cur.execute('CREATE DATABASE weather_etl_db')
-        print('Database created successfully ! (or existed)')
+        admin_cur.execute(f"SELECT 1 FROM pg_catalog.pg_database WHERE datname = '{config.PG_DBNAME}'")
+        exists=admin_cur.fetchone()
+        if not exists:
+            admin_cur.execute(f'CREATE DATABASE {config.PG_DBNAME}')
+            print('Database created successfully !')
+        else:
+            print('Database already exists !')
     except Exception as e:
-        print(f'Error occured:{e}')
+        logging.error(f'Database error occured: {e}')
+        sys.exit(main())
 
     finally:
         if admin_cur:
@@ -41,12 +47,12 @@ def main():
             print('Database initialization completed successfully.')
 
     except Exception as e:
-        print(f'Error occurred:{e}')
-
+        logging.error(f'Database error occured: {e}')
+        sys.exit(main())
     finally:
         if conn:
             conn.close()
             
 
 if __name__=='__main__':
-    main()
+    sys.exit(main())

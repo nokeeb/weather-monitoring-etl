@@ -8,12 +8,15 @@ def transform(raw_json,location,run_id,extracted_at,raw_file_path):
         raise Exception("Missing 'current'")
     try:
         current=raw_json['current']
-        if current['time'] is not None:
-            time=current['time']
-        time=datetime.fromisoformat(time).astimezone(timezone.utc)
-        temperature_c=current['temperature_2m']
-        relative_humidity_pct=current['relative_humidity_2m']
-        surface_pressure_hpa=current['surface_pressure']
+        if current['time'] is  None:
+            raise Exception("Missing or null 'time' in current")
+        time=datetime.fromisoformat(current['time']).replace(tzinfo=timezone.utc)
+        if current['temperature_2m'] is not None and current['temperature_2m']>=-60 and current['temperature_2m']<=60:
+            temperature_c=current['temperature_2m']
+        if current['relative_humidity_2m'] is not None and current['relative_humidity_2m']>=0 and current['relative_humidity_2m']<=100:
+            relative_humidity_pct=current['relative_humidity_2m']
+        if current['surface_pressure'] is not None and current['surface_pressure']>=800 and current['surface_pressure']<=1100:
+            surface_pressure_hpa=current['surface_pressure']
         wind_speed_kmh=current['wind_speed_10m']
         weather_code=current['weather_code']
 
@@ -26,4 +29,4 @@ def transform(raw_json,location,run_id,extracted_at,raw_file_path):
                 
         return psql_record
     except Exception as e:
-        raise e(f'{e}')
+        raise 

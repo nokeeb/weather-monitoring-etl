@@ -14,9 +14,9 @@ def get_connection(database_name):
     return conn
 
 def read_locations(connection):
-    cur=connection.cursor()
-    cur.execute("SELECT * FROM weather.locations")
-    return cur.fetchall()
+    with connection.cursor() as cur:
+        cur.execute("SELECT * FROM weather.locations")
+        return cur.fetchall()
 
 def execute_sql(file_name):
     PROJECT_ROOT=config.PROJECT_ROOT
