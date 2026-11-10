@@ -8,6 +8,7 @@ from src import config,database
 import logging
 
 def main():
+    logging.basicConfig(filename=PROJECT_ROOT/'logs'/'database_init.log',level=logging.INFO)
     admin_conn=None
     admin_cur=None
     conn=None
