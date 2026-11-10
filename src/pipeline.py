@@ -3,7 +3,6 @@ PROJECT_ROOT=Path(__file__).resolve().parent.parent
 import sys
 import uuid
 import logging
-import datetime
 sys.path.insert(0,str(PROJECT_ROOT))
 from src import extract,database,transform,load
 def main():
